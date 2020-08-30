@@ -1,0 +1,74 @@
+<!--
+ * @Author: vivien
+ * @Date: 2020-08-30 16:07:31
+ * @Last Modified by: vivien
+ * @LastEditTime: 2020-08-30 18:40:17
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <div id="id" class="class a b">
+        </div>
+    </div>
+</body>
+<script>
+function match(selector, element) {
+    let selector_arr = selector.split(' ');  
+    let parent_arr = [];  
+    let selector_re = /(\w+)|(\.\w+)|(\#\w+)/g;
+    for(let i=0; i < selector_arr.length; i++){
+        parent_arr.push(selector_arr[i].match(selector_re));
+    }
+    console.log(parent_arr);
+
+    let matched = true;
+    for(let j=parent_arr.length-1; j>=0; j--){
+        if(!currentElementMatch(parent_arr[j], element)){
+            matched = false;
+            break;
+        }
+        element = element.parentNode;
+    }
+    console.log(matched);
+    return matched; 
+}
+
+function currentElementMatch(curSeletor, curElement){
+    let hasId = false, hasClass = false, hasTag = false;
+    let idMatch = false, classMatch = false, tagMatch = false;
+    for(let i = 0; i<curSeletor.length;i++){
+        if(curSeletor[i].charAt(0) === '#'){
+        hasId = true;
+        if(curElement.id === curSeletor[i].replace('#','')){
+            idMatch = true;
+        }
+        }else if(curSeletor[i].charAt(0) === '.'){
+        hasClass = true;
+        classMatch = false;
+        for(let j = 0;j<curElement.classList.length; j++){
+            if(curElement.classList[j] === curSeletor[i].replace('.','')){
+            classMatch = true;
+            break;
+            }
+        }
+        }else{
+        hasTag = true;
+        if(curElement.tagName.toLowerCase() === curSeletor[i]){
+            tagMatch = true;
+        }
+        }
+    }
+
+    return ((hasId && idMatch) || !hasId) && ((hasClass && classMatch) || !hasClass) && ((hasTag && tagMatch) || !hasTag)
+}
+
+
+match("div #id.class.a.b", document.getElementById("id"));
+</script>
+</html>
