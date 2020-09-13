@@ -1,0 +1,145 @@
+<!--
+ * @Author: vivien
+ * @Date: 2020-09-13 14:01:15
+ * @Last Modified by: vivien
+ * @LastEditTime: 2020-09-13 20:02:29
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let names = Object.getOwnPropertyNames(window);
+
+        function filterOut(names, props) {
+            let set = new Set();
+            props.forEach(o => set.add(o))
+            return names.filter(e => !set.has(e));
+        }
+
+        // ECMA 262
+        {
+            let js = new Set();
+            let objects = ["globalThis", "console", "BigInt", "BigInt64Array", "BigUint64Array", "Infinity", "NaN", "undefined", "eval", "isFinite", "isNaN", "parseFloat", "parseInt", "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent", "Array", "Date", "RegExp", "Promise", "Proxy", "Map", "WeakMap", "Set", "WeakSet", "Function", "Boolean", "String", "Number", "Symbol", "Object", "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", "ArrayBuffer", "SharedArrayBuffer", "DataView", "Float32Array", "Float64Array", "Int8Array", "Int16Array", "Int32Array", "Uint8Array", "Uint16Array", "Uint32Array", "Uint8ClampedArray", "Atomics", "JSON", "Math", "Reflect", "escape", "unescape"];
+            objects.forEach(o => js.add(o));
+            names = names.filter(e => !js.has(e));
+        }
+
+        // subclass of Node
+        names = names.filter(e => {
+            try{
+              return !(window[e].prototype instanceof Node)
+            } catch(err){
+               return true;
+            }
+        }).filter( e => e != "Node");
+
+        // events
+        names = names.filter(e => !e.match(/^on/));
+
+        // webkit private
+        names = names.filter(e => !e.match(/^webkit/));
+
+        // html
+        let interfaces = new Set();
+        objects = ["ApplicationCache", "AudioTrack", "AudioTrackList", "BarProp", "BeforeUnloadEvent", "BroadcastChannel", "CanvasGradient", "CanvasPattern", "CanvasRenderingContext2D", "CloseEvent", "CustomElementRegistry", "DOMStringList", "DOMStringMap", "DataTransfer", "DataTransferItem", "DataTransferItemList", "DedicatedWorkerGlobalScope", "Document", "DragEvent", "ErrorEvent", "EventSource", "External", "FormDataEvent", "HTMLAllCollection", "HashChangeEvent", "History", "ImageBitmap", "ImageBitmapRenderingContext", "ImageData", "Location", "MediaError", "MessageChannel", "MessageEvent", "MessagePort", "MimeType", "MimeTypeArray", "Navigator", "OffscreenCanvas", "OffscreenCanvasRenderingContext2D", "PageTransitionEvent", "Path2D", "Plugin", "PluginArray", "PopStateEvent", "PromiseRejectionEvent", "RadioNodeList", "SharedWorker", "SharedWorkerGlobalScope", "Storage", "StorageEvent", "TextMetrics", "TextTrack", "TextTrackCue", "TextTrackCueList", "TextTrackList", "TimeRanges", "TrackEvent", "ValidityState", "VideoTrack", "VideoTrackList", "WebSocket", "Window", "Worker", "WorkerGlobalScope", "WorkerLocation", "WorkerNavigator"];
+        objects.forEach(o => interfaces.add(o));
+
+        names = names.filter(e => !interfaces.has(e));
+
+        // Intl
+        names = names.filter(e => e != "Intl")
+
+        // WebGl
+        names = filterOut(names, ["WebGLVertexArrayObject","WebGLTransformFeedback","WebGLSync","WebGLSampler","WebGLQuery","WebGL2RenderingContext","WebGLContextEvent","WebGLObject", "WebGLBuffer", "WebGLFramebuffer", "WebGLProgram", "WebGLRenderbuffer", "WebGLShader", "WebGLTexture", "WebGLUniformLocation", "WebGLActiveInfo", "WebGLShaderPrecisionFormat", "WebGLRenderingContext"]);
+        
+        // webAudio
+        names = filterOut(names, ["AudioContext", "AudioNode", "AnalyserNode", "AudioBuffer", "AudioBufferSourceNode", "AudioDestinationNode", "AudioParam", "AudioListener", "AudioWorklet", "AudioWorkletGlobalScope", "AudioWorkletNode", "AudioWorkletProcessor", "BiquadFilterNode", "ChannelMergerNode", "ChannelSplitterNode", "ConstantSourceNode", "ConvolverNode", "DelayNode", "DynamicsCompressorNode", "GainNode", "IIRFilterNode", "MediaElementAudioSourceNode", "MediaStreamAudioSourceNode", "MediaStreamTrackAudioSourceNode", "MediaStreamAudioDestinationNode", "PannerNode", "PeriodicWave", "OscillatorNode", "StereoPannerNode", "WaveShaperNode", "ScriptProcessorNode", "AudioProcessingEvent", "OfflineAudioContext", "OfflineAudioCompletionEvent"]);  
+        
+        // whatwg  
+        names = filterOut(names, ["TextDecoder", "TextEncoder", "TextDecoderStream", "TextEncoderStream"]);
+        
+        // Streams 
+        names = filterOut(names, ["ReadableStream", "ReadableStreamDefaultReader", "ReadableStreamBYOBReader", "ReadableStreamDefaultController", "ReadableByteStreamController", "ReadableStreamBYOBRequest", "WritableStream", "WritableStreamDefaultWriter", "WritableStreamDefaultController", "TransformStream", "TransformStreamDefaultController", "ByteLengthQueuingStrategy", "CountQueuingStrategy"]);
+        
+        // SyncManager
+        names = filterOut(names,["SyncManager"]);
+
+        // Web Cryptography API
+        names = filterOut(names, ["CryptoKey", "SubtleCrypto", "Crypto", "crypto"]);
+        
+        // Media Source Extensions 
+        names = filterOut(names, ["MediaSource", "SourceBuffer", "SourceBufferList"]);
+
+        // The Screen Orientation API
+        names = filterOut(names, ["ScreenOrientation"]);
+
+        // WebRTC API
+        names = filterOut(names, ["RTCPeerConnection", "RTCDataChannel", "RTCDataChannelEvent", "RTCSessionDescription", "RTCStatsReport", "RTCIceCandidate", "RTCIceTransport", "RTCPeerConnectionIceEvent", "RTCRtpSender", "RTCRtpReceiver", "RTCTrackEvent", "RTCSctpTransport", "RTCRtpTransceiver", "RTCPeerConnectionIceErrorEvent", "RTCErrorEvent", "RTCError", 
+    "RTCDtlsTransport", "RTCDTMFToneChangeEvent", "RTCDTMFSender", "RTCCertificate"]);
+
+        // MediaStream Image Capture API
+        names = filterOut(names, ["PhotoCapabilities", "ImageCapture"]);
+
+        // OverconstrainedError
+        names = filterOut(names, ["OverconstrainedError"]);
+
+        // Network Information API
+        names = filterOut(names, ["NetworkInformation"]);
+
+        // Media Capture and Streams API (Media Stream)
+        names = filterOut(names, ["BlobEvent", "CanvasCaptureMediaStreamTrack", "InputDeviceInfo", "MediaDeviceKind", "MediaDeviceInfo", "MediaDevices", "MediaStream", "MediaStreamConstraints", "MediaStreamEvent", "MediaStreamTrack", "MediaStreamTrackEvent", "MediaTrackCapabilities", "MediaTrackConstraints", "MediaTrackSettings", "MediaTrackSupportedConstraints", "NavigatorUserMedia", "NavigatorUserMediaError", "OverconstrainedError", "URL"]);
+
+        // Media Capabilities API
+        names = filterOut(names, ["MediaCapabilities", "ScreenLuminance", "Screen", "MediaCapabilitiesInfo"]);
+
+        // MediaStream Image Capture API
+        names = filterOut(names, ["MediaSettingsRange"]);
+
+        // MediaStream Recording API
+        names = filterOut(names, ["MediaRecorder", "MediaRecorderErrorEvent", "BlobEvent"]);
+
+        // Encrypted Media Extensions API
+        names = filterOut(names, ["MediaEncryptedEvent"]);
+
+        // IndexedDB API
+        names = filterOut(names, ["IDBVersionChangeEvent", "IDBCursor", "IDBCursorSync", "IDBCursorWithValue", "IDBDatabase", "IDBDatabaseException", "IDBDatabaseSync", "IDBEnvironment", "IDBEnvironmentSync", "IDBFactory", "IDBFactorySync","IDBIndex", "IDBIndexSync", "IDBKeyRange", "IDBObjectStore", "IDBObjectStoreSync", "IDBOpenDBRequest","IDBRequest","IDBTransaction", "IDBTransactionSync", "IDBVersionChangeRequest"]);
+        
+        // Geolocation API
+        names = filterOut(names, ["GeolocationPositionError", "Geolocation", "GeolocationCoordinates", "GeolocationPosition"]);
+
+        // Gamepad API
+        names = filterOut(names, ["Gamepad", "GamepadButton", "GamepadEvent", "GamepadHapticActuator", "GamepadPose"])
+
+        // SVGTransform
+        names = filterOut(names, ["SVGAElement", "SVGAltGlyphElement", "SVGAngle", "SVGAnimateColorElement", "SVGAnimateElement", "SVGAnimateMotionElement", "SVGAnimateTransformElement", "SVGAnimatedAngle", "SVGAnimatedBoolean",
+    "SVGAnimatedEnumeration", "SVGAnimatedInteger", "SVGAnimatedLength", "SVGAnimatedLengthList", "SVGAnimatedNumber", "SVGAnimatedNumberList", "SVGAnimatedPathData", "SVGAnimatedPoints", "SVGAnimatedPreserveAspectRatio", "SVGAnimatedRect", "SVGAnimatedString", "SVGAnimatedTransformList",
+     "SVGAnimationElement", "SVGCircleElement", "SVGClipPathElement", "SVGComponentTransferFunctionElement", "SVGCursorElement", "SVGDefsElement", "SVGDescElement", "SVGDocument", "SVGElement", "SVGEllipseElement","SVGTransform", "SVGUnitTypes", "SVGTransformList", "SVGStringList","TimeEvent", "SVGZoomEvent", "SVGUseElement",
+    "SVGViewElement", "SVGZoomAndPan", "SVGTitleElement", "SVGRect", "SVGPreserveAspectRatio", "SVGPointList", "SVGPoint", "SVGNumberList", "SVGNumber", "SVGMatrix", "SVGLengthList", "SVGLength"])
+        
+        // Document Object Model XPath
+        names = filterOut(names, ["XPathException", "XPathExceptionCode", "XPathEvaluator", "XPathExpression", "XPathNSResolver", "XPathNSResolver", "XPathResult", "XPathNamespace"])
+
+        // XMLHttpRequest
+        names = filterOut(names, ["FormData","XMLHttpRequest", "XMLHttpRequestEventTarget", "XMLHttpRequestUpload"])
+
+        // Touch events
+        names = filterOut(names, ["Touch", "TouchEvent", "TouchList"]);
+
+        // window
+        names = filterOut(names, ["length", "history", "document", "event", "frameElement", "frames", "fullScreen", "indexedDB", "innerHeight", "innerWidth", "isSecureContext", "isSecureContext", "localStorage", "location",
+        "locationbar", "menubar", "name", "navigator", "oncanplay", "onwheel", "origin", "outerHeight", "outerWidth", "pageXOffset", "pageYOffset", "parent", "performance", "personalbar",
+        "screen", "screenLeft", "screenTop", "screenX", "screenY", "scrollbars", "scrollX", "scrollY", "self", "sessionStorage","sidebar", "top", "window", "alert", "find", "blur", "clearInterval", "clearTimeout", "close",
+        "confirm", "visualViewport", "status", "statusbar", "toolbar","convertPointFromNodeToPage", "createImageBitmap", "fetch", "find", "getAttention", "getComputedStyle", "getDefaultComputedStyle", "getSelection",
+        "matchMedia", "minimize", "moveBy", "moveTo", "open", "postMessage", "print", "prompt", "resizeBy", "resizeTo", "restore","scroll", "scrollBy", "scrollTo", "setInterval", "setTimeout", "sizeToContent", "stop", "updateCommands",
+        "event", "focus", "DOMConfiguration", "DOMError", "DOMErrorHandler", "DOMException", "DOMImplementation", "DOMImplementationList", "DOMImplementationRegistry", "DOMImplementationSource", "DOMLocator", "DOMObject", "DOMParser", "Document", "Node",
+        "NodeFilter", "NodeIterator", "NodeList", "NonDocumentTypeChildNode", "NonDocumentTypeChildNode", "PromiseResolver", "Range", "StaticRange", "Text", "XMLDocument", "DOMPointReadOnly", "DOMPoint", "DOMMatrixReadOnly", "DOMMatrix", "DOMTokenList", "DOMRectReadOnly", "DOMRectList", "DOMRect", 
+        "DOMQuad", "CustomEvent", "opener", "closed", "customElements", "devicePixelRatio", "defaultStatus", "defaultStatus", "captureEvents", "releaseEvents", "requestIdleCallback", "cancelIdleCallback", "btoa", "atob", "caches", ])
+        console.log(names);
+    </script>
+</body>
+</html>
