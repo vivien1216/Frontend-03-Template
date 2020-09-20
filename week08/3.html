@@ -1,0 +1,181 @@
+<!--
+ * @Author: vivien
+ * @Date: 2020-09-20 13:29:51
+ * @Last Modified by: vivien
+ * @LastEditTime: 2020-09-20 17:18:48
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #board{
+            display: flex;
+            flex-wrap: wrap;
+            width: 500px;
+            margin: 100px auto;
+        }
+        .cell{
+            width: 100px;
+            height: 100px;
+            background-color: green;
+            display: inline-block;
+            border: 1px solid #fff;
+            line-height: 100px;
+            font-size: 50px;
+            text-align: center;
+            color: red;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="board"></div> 
+</body>
+<script>
+    let pattern = [
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+        ]
+        let color = 1;
+
+        function show() {
+            let board = document.getElementById('board');
+            board.innerHTML = '';
+            for(let i = 0; i < 5; i++){
+                for(let j = 0; j < 5; j++){
+                    let cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.innerHTML = pattern[i][j] == 2 ? 'X' : pattern[i][j] == 1 ? 'O' : '';
+                    cell.addEventListener('click', () => move(j, i));
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        function move(x,y){
+            if(pattern[y][x]){
+                return false;
+            }
+            pattern[y][x] = color;
+            if(check(pattern, color)){
+                alert(color == 2 ? 'x is winner!' : 'o is winner');
+            }
+            console.log(pattern[y, x], color);
+            color = 3 - color;
+            show(); 
+            // console.log(bestChoice(pattern, color));
+            // console.log('kl', willWin(pattern, color));
+            if(willWin(pattern, color)){
+               console.log(color == 2 ? 'X will win' : 'O will win');
+            }
+        }
+
+        function userMove(x, y){
+            if(pattern[y][x]){
+                return false;
+            }
+            pattern[y][x] = color;
+            if(check(pattern, color)){
+                alert(color == 2 ? 'x is winner!' : 'o is winner');
+            }
+            console.log(pattern[y, x], color);
+            color = 3 - color;
+            show(); 
+            computerMove();
+            // console.log(bestChoice(pattern, color));
+            if(willWin(pattern, color)){
+               console.log(color == 2 ? 'X will win' : 'O will win');
+            }
+        }
+
+        function computerMove() {
+            let choice = bestChoice(pattern, color);
+            if(choice.point)
+               pattern[choice.point[1]][choice.point[0]] = color;
+            if(check(pattern, color)){
+                alert(color == 2 ? 'x is winner!' : 'o is winner');
+            }
+            color = 3 - color;
+            show();
+        }
+
+        function check(pattern, color){
+            // 竖向判断
+            for(let i = 0; i < 5; i++){
+                let win = true;
+                for(let j = 0; j < 5; j++){
+                    if(pattern[i][j] !== color){
+                        win = false
+                    }
+                }
+                if(win){
+                    return true;
+                }
+            }
+            // 横向判断
+            for(let i = 0; i < 5; i++){
+                let win = true;
+                for(let j = 0; j < 5; j++){
+                    if(pattern[j][i] !== color){
+                        win = false;
+                    }
+                }
+                if(win){
+                    return true;
+                }
+            }
+            // 斜向
+            {
+                let win = true;
+                for(let i = 0; i < 5; i++){
+                    if(pattern[i][i] !== color){
+                        win = false;
+                    }
+                }
+                if(win){
+                    return true;
+                }
+            }
+            {
+                let win = true;
+                for(let i = 0; i < 5; i++){
+                    if(pattern[i][5-i] !== color){
+                        win = false;
+                    }
+                }
+                if(win){
+                    return true
+                }
+            }
+            return false;
+        }
+        
+        function clone(pattern){
+            return JSON.parse(JSON.stringify(pattern));
+        }
+
+        function willWin(pattern, color){
+            for(let i = 0; i < 5; i++){
+                for(let j = 0; j < 5; j++){
+                    if(pattern[i][j])
+                        continue
+                    let tmp = clone(pattern);
+                    tmp[i][j] = color;
+                    if(check(tmp, color)){
+                        return [j, i];
+                    }
+                }
+            }
+            return null;
+        }
+
+        show();
+</script>
+</html>
