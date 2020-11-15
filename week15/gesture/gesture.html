@@ -1,0 +1,16 @@
+<!--
+ * @Author: vivien
+ * @Date: 2020-11-08 10:48:12
+ * @Last Modified by: vivien
+ * @LastEditTime: 2020-11-09 22:30:05
+-->
+<body oncontextmenu="()=>{prevent.default()}">
+</body>
+
+<script type="module">
+    import { enableGesture } from './gesture.js';
+    enableGesture(document.documentElement);
+    document.documentElement.addEventListener('tab', () => {
+        console.log('tab event trigger!!!');
+    })
+</script>
