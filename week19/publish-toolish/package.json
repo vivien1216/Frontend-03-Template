@@ -1,0 +1,16 @@
+{
+  "name": "publish-toolish",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "publish": "scp -r -P 8022 ./* vivien@127.0.0.1:/home/vivien/server",
+    "start": "node ./bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "archiver": "^5.1.0"
+  }
+}
